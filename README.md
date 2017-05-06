@@ -1,8 +1,9 @@
 # FeedGoo
-Raspberry Pi-powered cat feeder
+Raspberry Pi-powered cat feeder written in python
 
 # Contact
 Ryan Matthews<br />
+http://www.maddogstudios.net<br />
 mhaddy@gmail.com
 
 # Credits
