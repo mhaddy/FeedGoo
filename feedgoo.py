@@ -10,7 +10,7 @@ import time
 import datetime
 import logging
 import RPi.GPIO as GPIO
-from astral import *
+from astral import Astral
 from pytz import timezone
 
 # lat/lon for sunset/sunrise calcs
@@ -20,7 +20,7 @@ a = Astral()
 a.solar_depression = 'civil'
 city = a[city_name]
 time_zone = city.timezone
-sun = city.sun(date=datetime.date(2009, 4, 22), local=True)
+sun = city.sun(date=datetime.datetime.now(), local=True)
 
 # logging
 log_dir = "/var/log/feedgoo/"
@@ -29,7 +29,7 @@ log_filename = "feedgoo.log"
 logging.basicConfig(filename=log_dir+log_filename,format='%(asctime)s : %(levelname)s : %(message)s',level=logging.DEBUG)
 
 logging.debug('Information for %s/%s\n' % (city_name, city.region))
-logging.debug('Timezone: %s' % timezone)
+logging.debug('Timezone: %s' % time_zone)
 logging.debug('Latitude: %.02f; Longitude: %.02f\n' % (city.latitude, city.longitude))
 logging.debug('Dawn:    %s' % str(sun['dawn']))
 logging.debug('Sunrise: %s' % str(sun['sunrise']))
@@ -94,20 +94,21 @@ def feed_goo(rotate_time, direction):
                 time.sleep(.25)
 
 # Call the feeding routine if the hour and min match the settings
-def feed_time(feed_hour, feed_min):
-	if time.strftime("%H") == feed_hour and time.strftime("%M") == feed_min:
-		logging.info("Dispensing food")
-		feed_goo(rotate_time, "cw")
-		time.sleep(60)
+#def feed_time(feed_hour, feed_min):
+	#if time.strftime("%H") == feed_hour and time.strftime("%M") == feed_min:
+def feed_time():
+	logging.info("Dispensing food")
+	feed_goo(rotate_time, "cw")
+	time.sleep(60)
 
 # If the push button is ... pushed, manually operate the feeder wheel
 def manual_feed(servo_pin):
-	feed_good(feeding_time, sleep_time)
-	feed_time = datetime.now(time_zone)
+	feed_goo(rotate_time, sleep_time)
+	feed_time = datetime.datetime.now(time_zone)
 	logging.info('Fed Goo at {}'.format(feed_time))
 
 def when_is_dusk():
-	dusk = location.dusk(local=True, date=None)
+	dusk = city.dusk(local=True, date=None)
 	dusk2 = dusk.strftime("%Y-%m-%d %H:%M:%S")
 	return dusk2
 
@@ -123,17 +124,21 @@ logging.info('I will feed Goo on {}'.format(dusk))
 
 # Main program loop
 while True:
-	now = datetime.now().strftime("%Y-%m-%d %H:%M:S")
+	now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:S")
 	
-	if now == dusk:
-		feed_time = datetime.now(time_zone)
-		logging.info('Starting Goo Feed at {}'.format(feed_time.strftime("%Y-%m-%d %H:%M:%S"))
-		
-		feed_goo(rotate_time,"cw")
+	logging.debug('The time is now {}'.format(now))
 
-		logging.info('Finishing Goo Feed at {}'.format(feed_time.strftime("%Y-%m-%d %H:%M:%S"))
+	if now == dusk:
+		feeding_time = datetime.datetime.now(time_zone)
+		logging.info('Starting Goo Feed at {}'.format(feeding_time.strftime("%Y-%m-%d %H:%M:%S")))
+		
+		feed_time()
+		#feed_goo(rotate_time,"cw")
+
+		logging.info('Finishing Goo Feed at {}'.format(feeding_time.strftime("%Y-%m-%d %H:%M:%S")))
 
 		time.sleep(60)
 	if time.strftime("%H") == "03" and time.strftime("%M") == "01" and time.strftime("%S") == "01":
 		dusk = when_is_dusk()
+
 	time.sleep(1)
