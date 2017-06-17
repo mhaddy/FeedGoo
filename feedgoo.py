@@ -8,6 +8,7 @@
 
 import time
 import datetime
+from datetime import date, timedelta, datetime
 import logging
 import RPi.GPIO as GPIO
 from astral import Astral
@@ -20,11 +21,11 @@ a = Astral()
 a.solar_depression = 'civil'
 city = a[city_name]
 time_zone = city.timezone
-sun = city.sun(date=datetime.datetime.now(), local=True)
+sun = city.sun(date=datetime.now(), local=True)
 
 # logging
 log_dir = "/var/log/feedgoo/"
-log_filename = "feedgoo.log"
+log_filename = "feedgoo_"+datetime.now().strftime("%Y%m%d")+".log"
 
 logging.basicConfig(filename=log_dir+log_filename,format='%(asctime)s : %(levelname)s : %(message)s',level=logging.DEBUG)
 
@@ -55,27 +56,29 @@ GPIO.output(buzz_pin, False)
 GPIO.output(butt_led_pin, False)
 
 # How long should we rotate the feeder wheel (seconds)?
-rotate_time = 1.3
+rotate_time_cw = 6.5
+rotate_time_ccw = 7.5
 
 # Functions that make the world, err, feeder wheels go 'round
 
 # Rotate feeder wheel clockwise
-def servo_cw(servo_pin, sleep_time):
+def servo_cw(servo_pin, rotate_time=rotate_time_cw):
 	servo = GPIO.PWM(servo_pin, 50)
-	servo.start(10.5)
-	time.sleep(sleep_time)
+	servo.start(rotate_time)
+	time.sleep(1)
 	servo.stop()
-	time.sleep(.05)
+	time.sleep(1)
 
 # Rotate feeder wheel counter clockwise
-def servo_ccw(servo_pin, sleep_time):
+def servo_ccw(servo_pin, rotate_time=rotate_time_ccw):
 	servo = GPIO.PWN(servo_pin, 50)
-	servo.start(4.5)
-	time.sleep(sleep_time)
+	servo.start(rotate_time)
+	time.sleep(1)
 	servo.stop()
+	time.sleep(1)
 
 # Call the appropriate servo_XXX function
-def feed_goo(rotate_time, direction):
+def feed_goo(direction, rotate_time_cw=rotate_time_cw, rotate_time_ccw=rotate_time_ccw):
 	GPIO.output(butt_led_pin, False)
 	GPIO.output(buzz_pin, True)
 	time.sleep(.10)
@@ -83,29 +86,21 @@ def feed_goo(rotate_time, direction):
 	GPIO.output(butt_led_pin, True)
 	
 	if direction == "cw":
-		logging.info("Servo rotate CW start")
-		servo_cw(servo_pin, rotate_time)
-		logging.info("Servo rotate CW finish")
+		logging.debug("Servo rotate CW start")
+		servo_cw(servo_pin, rotate_time_cw)
+		logging.debug("Servo rotate CW finish")
 		time.sleep(.25)
 	else:
-                logging.info("Servo rotate CCW start")
-                servo_ccw(servo_pin, rotate_time)
-                logging.info("Servo rotate CCW finish")
+                logging.debug("Servo rotate CCW start")
+                servo_ccw(servo_pin, rotate_time_ccw)
+                logging.debug("Servo rotate CCW finish")
                 time.sleep(.25)
 
-# Call the feeding routine if the hour and min match the settings
-#def feed_time(feed_hour, feed_min):
-	#if time.strftime("%H") == feed_hour and time.strftime("%M") == feed_min:
-def feed_time():
-	logging.info("Dispensing food")
-	feed_goo(rotate_time, "cw")
-	time.sleep(60)
-
 # If the push button is ... pushed, manually operate the feeder wheel
-def manual_feed(servo_pin):
-	feed_goo(rotate_time, sleep_time)
-	feed_time = datetime.datetime.now(time_zone)
-	logging.info('Fed Goo at {}'.format(feed_time))
+def manual_feed():
+	feed_goo("cw")
+	feeding_time = datetime.now()
+	logging.info('Fed Goo at {}'.format(feeding_time))
 
 def when_is_dusk():
 	dusk = city.dusk(local=True, date=None)
@@ -113,7 +108,7 @@ def when_is_dusk():
 	return dusk2
 
 # Detect when the manual_feed button is pushed
-GPIO.add_event_detect(butt_switch_pin, GPIO.RISING, callback=manual_feed, bouncetime=500)
+#GPIO.add_event_detect(butt_switch_pin, GPIO.RISING, callback=manual_feed, bouncetime=500)
 
 # Set the initial dusk time
 dusk = when_is_dusk()
@@ -124,16 +119,13 @@ logging.info('I will feed Goo on {}'.format(dusk))
 
 # Main program loop
 while True:
-	now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:S")
+	now = datetime.now().strftime("%Y-%m-%d %H:%M:S")
 	
-	logging.debug('The time is now {}'.format(now))
-
 	if now == dusk:
-		feeding_time = datetime.datetime.now(time_zone)
+		feeding_time = datetime.now()
 		logging.info('Starting Goo Feed at {}'.format(feeding_time.strftime("%Y-%m-%d %H:%M:%S")))
 		
-		feed_time()
-		#feed_goo(rotate_time,"cw")
+		feed_goo("cw")
 
 		logging.info('Finishing Goo Feed at {}'.format(feeding_time.strftime("%Y-%m-%d %H:%M:%S")))
 
