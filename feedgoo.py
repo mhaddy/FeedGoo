@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # encoding: utf-8
 
 # license: MIT
@@ -6,8 +7,10 @@
 # Ryan Matthews
 # mhaddy@gmail.com
 
+import schedule
 import time
 import datetime
+<<<<<<< HEAD
 from datetime import date, timedelta, datetime
 import logging
 import RPi.GPIO as GPIO
@@ -26,17 +29,25 @@ sun = city.sun(date=datetime.now(), local=True)
 # logging
 log_dir = "/var/log/feedgoo/"
 log_filename = "feedgoo_"+datetime.now().strftime("%Y%m%d")+".log"
+=======
+#from datetime import date, timedelta, datetime
+import logging
+import RPi.GPIO as GPIO
+#import pytz
+#from pytz import timezone
+
+# logging
+log_dir = "/var/log/feedgoo/"
+
+# if you want your logs to rotate, uncomment the below
+# log_filename = "feedgoo_"+datetime.now().strftime("%Y%m%d")+".log"
+log_filename = "feedgoo.log"
+>>>>>>> v1
 
 logging.basicConfig(filename=log_dir+log_filename,format='%(asctime)s : %(levelname)s : %(message)s',level=logging.DEBUG)
 
-logging.debug('Information for %s/%s\n' % (city_name, city.region))
-logging.debug('Timezone: %s' % time_zone)
-logging.debug('Latitude: %.02f; Longitude: %.02f\n' % (city.latitude, city.longitude))
-logging.debug('Dawn:    %s' % str(sun['dawn']))
-logging.debug('Sunrise: %s' % str(sun['sunrise']))
-logging.debug('Noon:    %s' % str(sun['noon']))
-logging.debug('Sunset:  %s' % str(sun['sunset']))
-logging.debug('Dusk:    %s' % str(sun['dusk']))
+logging.info('----------------------------')
+logging.info('Beginning Feed Goo routine for {}'.format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S %Z%z")))
 
 # GPIO setup
 GPIO.setwarnings(False)
@@ -56,14 +67,25 @@ GPIO.setup(butt_led_pin, GPIO.OUT)
 GPIO.output(buzz_pin, False)
 GPIO.output(butt_led_pin, False)
 
+<<<<<<< HEAD
 # How long should we rotate the feeder wheel (seconds)?
 # https://circuitdigest.com/microcontroller-projects/raspberry-pi-servo-motor-control
 rotate_time_cw = 6.5
 rotate_time_ccw = 7.5
+=======
+# How long should we rotate the feeder wheel (refers to duty cycle)?
+# length of time for wheel rotation determined by time.sleep(x) following servo.start() cmd
+# https://circuitdigest.com/microcontroller-projects/raspberry-pi-servo-motor-control
+rotate_time_cw = 6.5
+rotate_time_ccw = 7.5
+
+direction = "ccw"
+>>>>>>> v1
 
 # Functions that make the world, err, feeder wheels go 'round
 
 # Rotate feeder wheel clockwise
+<<<<<<< HEAD
 def servo_cw(servo_pin, rotate_time_cw):
 	servo = GPIO.PWM(servo_pin, 50)
 	servo.start(rotate_time_cw)
@@ -76,10 +98,27 @@ def servo_ccw(servo_pin, rotate_time_ccw):
 	servo = GPIO.PWN(servo_pin, 50)
 	servo.start(rotate_time_ccw)
 	time.sleep(1)
+=======
+def servo_cw():
+	servo = GPIO.PWM(servo_pin, 50)
+	servo.start(rotate_time_cw)
+	time.sleep(2)
+	servo.stop()
+
+# Rotate feeder wheel counter clockwise
+# I'm not really using this right now but it will come in handy if the wheel
+# gets stuck - so I'm keeping it here for now ... code to be updated at a
+# later date to take advantage of this
+def servo_ccw():
+	servo = GPIO.PWM(servo_pin, 50)
+	servo.start(rotate_time_ccw)
+	time.sleep(2)
+>>>>>>> v1
 	servo.stop()
 	time.sleep(1)
 
 # Call the appropriate servo_XXX function
+<<<<<<< HEAD
 def feed_goo(rotate_time_cw, rotate_time_ccw, direction):
 	GPIO.output(butt_led_pin, False)
 	GPIO.output(buzz_pin, True)
@@ -117,12 +156,51 @@ def when_is_dusk():
 # Set the initial dusk time
 dusk = when_is_dusk()
 logging.info('I will feed Goo on {}'.format(dusk))
+=======
+# TODO: incorporate the direction into the call; for now, it's cw
+def feed_goo():
+	#GPIO.output(butt_led_pin, False)
+	
+	for x in range(0,10):	
+		GPIO.output(buzz_pin, True)
+		time.sleep(.25)
+		GPIO.output(buzz_pin, False)
+
+	#GPIO.output(butt_led_pin, True)
+	
+	if direction == "cw":
+		logging.debug("Servo rotate CW start")
+		servo_cw()
+		logging.debug("Servo rotate CW finish")
+	else:
+                logging.debug("Servo rotate CCW start")
+                servo_ccw()
+                logging.debug("Servo rotate CCW finish")
+
+# If the push button is ... pushed, manually operate the feeder wheel
+def manual_feed():
+	feed_goo("cw")
+	feeding_time = datetime.datetime.now()
+	logging.info('Manually fed Goo at {}'.format(feeding_time))
+
+# Detect when the manual_feed button is pushed
+#GPIO.add_event_detect(butt_switch_pin, GPIO.RISING, callback=manual_feed, bouncetime=500)
+>>>>>>> v1
 
 # Turn on button LED
 #GPIO.output(butt_switch_led, True)
 
+# feeding schedule
+# https://pypi.python.org/pypi/schedule
+# TODO: use Astral/Pytz to find dawn/dusk and feed accordingly
+# instead of hard-set times
+schedule.every().day.at("10:35").do(feed_goo) #6:35 AM
+schedule.every().day.at("22:53").do(feed_goo) #6:53 PM
+#schedule.every(1).minutes.do(feed_goo)
+
 # Main program loop
 while True:
+<<<<<<< HEAD
 	now = datetime.now().strftime("%Y-%m-%d %H:%M:S")
 	
 	if now == dusk:
@@ -138,3 +216,7 @@ while True:
 		dusk = when_is_dusk()
 
 	time.sleep(1)
+=======
+	schedule.run_pending()
+	time.sleep(30)
+>>>>>>> v1
