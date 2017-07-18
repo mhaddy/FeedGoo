@@ -95,25 +95,9 @@ def feed_goo():
 
 # If the push button is ... pushed, manually operate the feeder wheel
 def manual_feed():
-	feed_goo("cw")
+	feed_goo()
 	feeding_time = datetime.datetime.now()
 	logging.info('Manually fed Goo at {}'.format(feeding_time))
 
-# Detect when the manual_feed button is pushed
-#GPIO.add_event_detect(butt_switch_pin, GPIO.RISING, callback=manual_feed, bouncetime=500)
 
-# Turn on button LED
-#GPIO.output(butt_switch_led, True)
-
-# feeding schedule
-# https://pypi.python.org/pypi/schedule
-# TODO: use Astral/Pytz to find dawn/dusk and feed accordingly
-# instead of hard-set times
-schedule.every().day.at("10:35").do(feed_goo) #6:35 AM
-schedule.every().day.at("22:53").do(feed_goo) #6:53 PM
-#schedule.every(1).minutes.do(feed_goo)
-
-# Main program loop
-while True:
-	schedule.run_pending()
-	time.sleep(30)
+manual_feed()
