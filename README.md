@@ -26,9 +26,7 @@ The above command just calls the manual_feed() routine to call the feed_goo() ro
 Both feedgoo.py and man_feedgoo.py write to feedgoo.log to /var/log/feedgoo/ directory.
 
 ## Future Versions
-1. Twitter integration for feed notifications (leverage log file)
-2. Hook into the python Astral library to identify sunrise and sunset to feed your cat at that time. 
-3. Suggest something!
+Refer to the [Wiki](https://github.com/mhaddy/FeedGoo/wiki)!
 
 # Contact
 Ryan Matthews<br />
