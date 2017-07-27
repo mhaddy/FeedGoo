@@ -15,7 +15,15 @@ And it'll wait until the scheduled times to operate the servo. I recommend addin
 
 Uses [schedule](https://github.com/dbader/schedule) to operate the servo at the designated times. Very powerful scheduler that doesn't rely on cron.
 
-Writes to feedgoo.log to /var/log/feedgoo/ directory.
+If you notice that the schedule isn't operating correctly and you want to trigger the servo immediately on an ad hoc basis, do the following:
+
+```
+python man_feedgoo.py
+```
+
+The above command just calls the manual_feed() routine to call the feed_goo() routine not on a schedule. 
+
+Both feedgoo.py and man_feedgoo.py write to feedgoo.log to /var/log/feedgoo/ directory.
 
 ## Future Versions
 1. Twitter integration for feed notifications (leverage log file)
