@@ -1,0 +1,35 @@
+# configuration file for FeedGoo
+
+# logging
+log_dir = "/var/log/feedgoo/"
+log_filename = "feedgoo.log"
+
+# GPIO setup
+# based on the pins you used on your Pi, adjust these to match your schema
+# Helpful site: https://pinout.xyz/
+servo_pin = 18 # servo
+buzz_pin = 23 # buzzer
+butt_switch_pin = 24 # button switch
+butt_led_pin = 25 # button led
+
+# How long should we rotate the feeder wheel (refers to duty cycle)?
+# length of time for wheel rotation determined by time.sleep(x) following servo.start() cmd
+# https://circuitdigest.com/microcontroller-projects/raspberry-pi-servo-motor-control
+# this will very based on the servo you're using, so TEST, TEST, TEST!
+rotate_time_cw = 6.1
+rotate_time_ccw = 7.5
+
+# What direction should the servo spin?
+direction = "cw"
+
+# morning feeding schedule (UTC 24 hr clock)
+morningtime = "10:30" # 6:30 AM EST
+eveningtime = "22:30" # 6:30 PM EST
+
+# Twython vars
+# https://github.com/ryanmcgrath/twython
+# FeedGoo uses this to post status updates/tweets on Twitter when food is dispensed
+APPKEY = 'YOUR_APP_KEY'
+APPSECRET = 'YOUR_APP_SECRET'
+ACCESSTOKEN = 'YOUR_ACCESS_TOKEN'
+ACCESSTOKENSECRET = 'YOUR_ACCESS_TOKEN_SECRET'
