@@ -1,5 +1,5 @@
 # FeedGoo
-Raspberry Pi-powered cat feeder written in Python that operates a high-torque servo-powered cereal dispenser (the kind you find in hotels) to deposit food down a pipe into a bowl to a smiling cat.
+Raspberry Pi-powered, Twitter-endabled cat feeder written in Python that operates a high-torque servo-powered cereal dispenser (the kind you find in hotels) to deposit food down a pipe into a bowl to a smiling cat.
 
 To run the script, do the following: 
 
@@ -7,7 +7,7 @@ To run the script, do the following:
 python feedgoo.py
 ```
 
-And it'll wait until the scheduled times to operate the servo. I recommend adding the script to your crontab @reboot so even if your Pi loses power, upon start-up, it'll resume the feeding schedule. To do that, add the following line to your crontab:
+And it'll wait until the scheduled times to operate the servo and tweet the world that food has been dispensed. I Recommend adding the script to your crontab @reboot so even if your Pi loses power, upon start-up, it'll resume the feeding schedule. To do that, add the following line to your crontab:
 
 ```
 @reboot python /home/mhadpi/FeedGoo/v1/feedgoo.py &
