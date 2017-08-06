@@ -1,5 +1,5 @@
 # FeedGoo
-Raspberry Pi-powered, Twitter-endabled cat feeder written in Python that operates a high-torque servo-powered cereal dispenser (the kind you find in hotels) to deposit food down a pipe into a bowl to a smiling cat.
+Raspberry Pi-powered, Twitter-enabled cat feeder written in Python that operates a high-torque servo-powered cereal dispenser (the kind you find in hotels) to deposit food down a pipe into a bowl to a smiling cat.
 
 To run the script, do the following: 
 
@@ -13,7 +13,7 @@ And it'll wait until the scheduled times to operate the servo and tweet the worl
 @reboot python /home/mhadpi/FeedGoo/v1/feedgoo.py &
 ```
 
-Uses [schedule](https://github.com/dbader/schedule) to operate the servo at the designated times. Very powerful scheduler that doesn't rely on cron.
+Uses [Twython](https://github.com/ryanmcgrath/twython) for Twitter-integration so follow its docs to get your Consumer Key, Consumer Secret, etc. Also uses [schedule](https://github.com/dbader/schedule) to operate the servo at the designated times. Very powerful scheduler that doesn't rely on cron.
 
 If you notice that the schedule isn't operating correctly and you want to trigger the servo immediately on an ad hoc basis, do the following:
 
