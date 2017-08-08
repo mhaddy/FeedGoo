@@ -14,8 +14,11 @@ import logging
 import RPi.GPIO as GPIO
 from twython import Twython
 import configvars as cv
+from random import randint
 
 logging.basicConfig(filename=cv.log_dir+cv.log_filename,format='%(asctime)s : %(levelname)s : %(message)s',level=logging.INFO)
+
+# we're using randint() here to prevent Twitter deleting tweets it feels are duplicates
 
 # Twython
 APP_KEY = cv.APPKEY
@@ -47,16 +50,6 @@ def servo_cw():
 	time.sleep(2)
 	servo.stop()
 
-# Rotate feeder wheel counter clockwise
-# I'm not really using this right now but it will come in handy if the wheel
-# gets stuck - so I'm keeping it here for now ... code to be updated at a
-# later date to take advantage of this
-def servo_ccw():
-	servo = GPIO.PWM(cv.servo_pin, 50)
-	servo.start(cv.rotate_time_ccw)
-	time.sleep(2)
-	servo.stop()
-
 # Call the appropriate servo_XXX function
 def feed_goo():
 	#not yet implemented
@@ -70,19 +63,14 @@ def feed_goo():
 	#not yet implemented
 	#GPIO.output(butt_led_pin, True)
 	
-	if cv.direction == "cw":
-		logging.debug("Servo rotate CW start")
-		servo_cw()
-		logging.debug("Servo rotate CW finish")
-	else:
-                logging.debug("Servo rotate CCW start")
-                servo_ccw()
-                logging.debug("Servo rotate CCW finish")
+	logging.debug("Servo rotate CW start")
+	servo_cw()
+	logging.debug("Servo rotate CW finish")
 
-# If the push button is ... pushed, manually operate the feeder wheel
+# TODO: Hook this into IFTTT
 def manual_feed():
 	feed_goo()
-	logging.info("Goo has been manually fed! /{}".format(cv.direction))
-	twitter.update_status(status="Goo has been manually fed! /{}".format(cv.direction))
+	logging.info("Goo has been manually fed!")
+	twitter.update_status(status="Goo has been manually fed! /{}".format(randint(0,10000)))
 
 manual_feed()

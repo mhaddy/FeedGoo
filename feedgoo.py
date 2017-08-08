@@ -14,8 +14,11 @@ import logging
 import RPi.GPIO as GPIO
 from twython import Twython
 import configvars as cv
+from random import randint
 
 logging.basicConfig(filename=cv.log_dir+cv.log_filename,format='%(asctime)s : %(levelname)s : %(message)s',level=logging.INFO)
+
+# we're using randint() here to prevent Twitter deleting tweets it feels are duplicates
 
 # Twython
 APP_KEY = cv.APPKEY
@@ -27,7 +30,7 @@ twitter = Twython(APP_KEY, APP_SECRET, OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
 
 logging.info('----------------------------')
 logging.info('Beginning FeedGoo routine for {}'.format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S %Z%z")))
-twitter.update_status(status="FeedGoo has been activated!")
+twitter.update_status(status="FeedGoo has been activated! /{}".format(randint(0,10000)))
 
 GPIO.setmode(GPIO.BCM)
 
@@ -47,7 +50,7 @@ def servo_cw():
 	servo.start(cv.rotate_time_cw)
 	time.sleep(2)
 	servo.stop()
-	twitter.update_status(status="Goo has been fed! /{}".format(cv.direction))
+	twitter.update_status(status="Goo has been fed! /{}.{}".format(cv.direction,randint(0,10000)))
 
 # Rotate feeder wheel counter clockwise
 # I'm not really using this right now but it will come in handy if the wheel
@@ -58,7 +61,7 @@ def servo_ccw():
 	servo.start(cv.rotate_time_ccw)
 	time.sleep(2)
 	servo.stop()
-	twitter.update_status(status="Goo has been fed! /{}".format(cv.direction))
+	twitter.update_status(status="Goo has been fed! /{}.{}".format(cv.direction,randint(0,10000)))
 
 # Call the appropriate servo_XXX function
 def feed_goo():
@@ -87,7 +90,7 @@ def feed_goo():
 def manual_feed():
         feed_goo()
         logging.info("Goo has been manually fed! /{}".format(cv.direction))
-        twitter.update_status(status="Goo has been manually fed! /{}".format(cv.direction))
+        twitter.update_status(status="Goo has been manually fed! /{}.{}".format(cv.direction,randint(0,10000)))
 
 # Detect when the manual_feed button is pushed
 # not yet implemented
