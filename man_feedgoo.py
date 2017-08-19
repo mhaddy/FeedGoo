@@ -15,6 +15,9 @@ import RPi.GPIO as GPIO
 from twython import Twython
 import configvars as cv
 from random import randint
+import pygame
+import pygame.camera
+from pygame.locals import *
 
 logging.basicConfig(filename=cv.log_dir+cv.log_filename,format='%(asctime)s : %(levelname)s : %(message)s',level=logging.INFO)
 
@@ -49,6 +52,7 @@ def servo_cw():
 	servo.start(cv.rotate_time_cw)
 	time.sleep(2)
 	servo.stop()
+	time.sleep(2)
 
 # Call the appropriate servo_XXX function
 def feed_goo():
@@ -71,6 +75,17 @@ def feed_goo():
 def manual_feed():
 	feed_goo()
 	logging.info("Goo has been manually fed!")
-	twitter.update_status(status="Goo has been manually fed! /{}".format(randint(0,10000)))
+
+        # take a picture 2 seconds after servo stops
+        pygame.init()
+        pygame.camera.init()
+        cam = pygame.camera.Camera('/dev/video0',(640,480))
+        cam.start()
+        image = cam.get_image()
+        pygame.image.save(image,'/home/mhadpi/pics/image.jpg')
+	photo = open('/home/mhadpi/pics/image.jpg','rb')
+
+	response = twitter.upload_media(media=photo)
+	twitter.update_status(status="Goo has been manually fed! /{}".format(randint(0,10000)), media_ids=[response['media_id']])
 
 manual_feed()

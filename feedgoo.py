@@ -15,6 +15,9 @@ import RPi.GPIO as GPIO
 from twython import Twython
 import configvars as cv
 from random import randint
+import pygame
+import pygame.camera
+from pygame.locals import *
 
 logging.basicConfig(filename=cv.log_dir+cv.log_filename,format='%(asctime)s : %(levelname)s : %(message)s',level=logging.INFO)
 
@@ -50,7 +53,19 @@ def servo_cw():
 	servo.start(cv.rotate_time_cw)
 	time.sleep(2)
 	servo.stop()
-	twitter.update_status(status="Goo has been fed! /{}.{}".format(cv.direction,randint(0,10000)))
+	time.sleep(2)
+
+        # take a picture 2 seconds after servo stops
+        pygame.init()
+        pygame.camera.init()
+        cam = pygame.camera.Camera('/dev/video0',(640,480))
+        cam.start()
+        image = cam.get_image()
+        pygame.image.save(image,'/home/mhadpi/pics/image.jpg')
+        photo = open('/home/mhadpi/pics/image.jpg','rb')
+
+	response = twitter.upload_media(media=photo)
+	twitter.update_status(status="Goo has been fed! /{}.{}".format(cv.direction,randint(0,10000)), media_ids=[response['media_id']])
 
 # Rotate feeder wheel counter clockwise
 # I'm not really using this right now but it will come in handy if the wheel
@@ -61,7 +76,19 @@ def servo_ccw():
 	servo.start(cv.rotate_time_ccw)
 	time.sleep(2)
 	servo.stop()
-	twitter.update_status(status="Goo has been fed! /{}.{}".format(cv.direction,randint(0,10000)))
+	time.sleep(2)
+
+        # take a picture 2 seconds after servo stops
+        pygame.init()
+        pygame.camera.init()
+        cam = pygame.camera.Camera('/dev/video0',(640,480))
+        cam.start()
+        image = cam.get_image()
+        pygame.image.save(image,'/home/mhadpi/pics/image.jpg')
+        photo = open('/home/mhadpi/pics/image.jpg','rb')
+
+        response = twitter.upload_media(media=photo)
+        twitter.update_status(status="Goo has been fed! /{}.{}".format(cv.direction,randint(0,10$
 
 # Call the appropriate servo_XXX function
 def feed_goo():
