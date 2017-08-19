@@ -50,7 +50,7 @@ GPIO.output(cv.butt_led_pin, False)
 def servo_cw():
 	servo = GPIO.PWM(cv.servo_pin, 50)
 	servo.start(cv.rotate_time_cw)
-	time.sleep(2)
+	time.sleep(3.5)
 	servo.stop()
 	time.sleep(2)
 

@@ -51,7 +51,7 @@ GPIO.output(cv.butt_led_pin, False)
 def servo_cw():
 	servo = GPIO.PWM(cv.servo_pin, 50)
 	servo.start(cv.rotate_time_cw)
-	time.sleep(2)
+	time.sleep(3.5)
 	servo.stop()
 	time.sleep(2)
 
@@ -74,7 +74,7 @@ def servo_cw():
 def servo_ccw():
 	servo = GPIO.PWM(cv.servo_pin, 50)
 	servo.start(cv.rotate_time_ccw)
-	time.sleep(2)
+	time.sleep(3.5)
 	servo.stop()
 	time.sleep(2)
 
@@ -88,7 +88,7 @@ def servo_ccw():
         photo = open('/home/mhadpi/pics/image.jpg','rb')
 
         response = twitter.upload_media(media=photo)
-        twitter.update_status(status="Goo has been fed! /{}.{}".format(cv.direction,randint(0,10$
+        twitter.update_status(status="Goo has been fed! /{}.{}".format(cv.direction,randint(0,10000)), media_ids=[response['media_id']])
 
 # Call the appropriate servo_XXX function
 def feed_goo():
