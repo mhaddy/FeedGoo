@@ -25,6 +25,12 @@ The above command just calls the manual_feed() routine to call the feed_goo() ro
 
 Both feedgoo.py and man_feedgoo.py write to feedgoo.log to /var/log/feedgoo/ directory.
 
+## Schema - How to build this
+Here's the [Parts List](https://docs.google.com/spreadsheets/d/1Oq6u6sb5ZfjovzqHFOSRNVcbzIy2-sk2-1YNxwCJh-8/edit?usp=sharing) I used to build the cat feeder along with where I purchased the item. Prices, shipping, etc. may vary but all-in, including the Pi, this project ran me CAD$125.
+
+You'll need the schema (pardon the diagram):
+![Schema](https://raw.githubusercontent.com/mhaddy/FeedGoo/master/docs/feedgoo.jpg)
+
 ## Future Versions
 Refer to the [Wiki](https://github.com/mhaddy/FeedGoo/wiki)!
 
@@ -34,6 +40,6 @@ http://www.maddogstudios.net<br />
 mhaddy@maddogstudios.net
 
 # Credits
-Heavily inspired by the project by similar name from David M. N. Bryan, dave@drstrangelove.net<br />
+Inspired by the project by similar name from David M. N. Bryan, dave@drstrangelove.net<br />
 URL: http://drstrangelove.net/2013/12/raspberry-pi-power-cat-feeder-updates/
 
