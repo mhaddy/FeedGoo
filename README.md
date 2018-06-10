@@ -31,6 +31,13 @@ Here's the [Parts List](https://docs.google.com/spreadsheets/d/1Oq6u6sb5ZfjovzqH
 You'll need the schema (pardon the diagram):
 ![Schema](https://raw.githubusercontent.com/mhaddy/FeedGoo/master/docs/feedgoo.jpg)
 
+## Finished Product
+When you're done, you could end up with something like this! I mounted the cereal dispenser on an old piece of poplar, and used a router to make room in the back of the wood for the Pi and breadboard when mounted on a wall.
+
+![Finished Product](https://raw.githubusercontent.com/mhaddy/FeedGoo/master/docs/IMG_1687.JPG)
+
+![Back of Wood](https://raw.githubusercontent.com/mhaddy/FeedGoo/master/docs/feedgoo-back.JPG)
+
 ## Future Versions
 Refer to the [Wiki](https://github.com/mhaddy/FeedGoo/wiki)!
 
