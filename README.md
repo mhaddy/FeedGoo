@@ -36,8 +36,8 @@ Refer to the [Wiki](https://github.com/mhaddy/FeedGoo/wiki)!
 
 # Contact
 Ryan Matthews<br />
-http://www.maddogstudios.net<br />
-mhaddy@maddogstudios.net
+https://ryansb.io<br />
+iam@ryansb.io
 
 # Credits
 Inspired by the project by similar name from David M. N. Bryan, dave@drstrangelove.net<br />
