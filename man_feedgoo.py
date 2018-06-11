@@ -7,7 +7,7 @@
 # Ryan Matthews
 # mhaddy@gmail.com
 
-import schedule
+#import schedule
 import time
 import datetime
 import logging
@@ -18,6 +18,13 @@ from random import randint
 import pygame
 import pygame.camera
 from pygame.locals import *
+import requests
+
+# cronitor
+requests.get(
+   'https://cronitor.link/{}/run'.format(cv.cronitor_hash),
+   timeout=10
+)
 
 logging.basicConfig(filename=cv.log_dir+cv.log_filename,format='%(asctime)s : %(levelname)s : %(message)s',level=logging.INFO)
 
@@ -32,7 +39,7 @@ OAUTH_TOKEN_SECRET = cv.ACCESSTOKENSECRET
 twitter = Twython(APP_KEY, APP_SECRET, OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
 
 logging.info('----------------------------')
-logging.info('Manually initiated FeedGoo routine for {}'.format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S %Z%z")))
+logging.info('Initiated FeedGoo routine for {}'.format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S %Z%z")))
 
 GPIO.setmode(GPIO.BCM)
 
@@ -50,9 +57,9 @@ GPIO.output(cv.butt_led_pin, False)
 def servo_cw():
 	servo = GPIO.PWM(cv.servo_pin, 50)
 	servo.start(cv.rotate_time_cw)
-	time.sleep(3.5)
+	time.sleep(cv.sleep_time_servo)
 	servo.stop()
-	time.sleep(2)
+	time.sleep(cv.sleep_time_servo)
 
 # Call the appropriate servo_XXX function
 def feed_goo():
@@ -61,7 +68,7 @@ def feed_goo():
 	
 	for x in range(0,10):	
 		GPIO.output(cv.buzz_pin, True)
-		time.sleep(.25)
+		time.sleep(cv.sleep_time_buzz)
 		GPIO.output(cv.buzz_pin, False)
 
 	#not yet implemented
@@ -82,10 +89,18 @@ def manual_feed():
         cam = pygame.camera.Camera('/dev/video0',(640,480))
         cam.start()
         image = cam.get_image()
-        pygame.image.save(image,'/home/mhadpi/pics/image.jpg')
-	photo = open('/home/mhadpi/pics/image.jpg','rb')
+        pygame.image.save(image,"{}/image.jpg".format(cv.img_path))
+	photo = open("{}/image.jpg".format(cv.img_path),"rb")
 
 	response = twitter.upload_media(media=photo)
-	twitter.update_status(status="Goo has been manually fed! /{}".format(randint(0,10000)), media_ids=[response['media_id']])
+	twitter.update_status(status="Goo has been fed! /{}".format(randint(0,10000)), media_ids=[response['media_id']])
 
+# call the feeding routine
+# scheduled via cron (schedule was too unreliable)
 manual_feed()
+
+# cronitor
+requests.get(
+   'https://cronitor.link/{}/complete'.format(cv.cronitor_hash),
+   timeout=10
+)

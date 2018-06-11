@@ -19,7 +19,14 @@ butt_led_pin = 25 # button led
 rotate_time_cw = 6.1
 rotate_time_ccw = 7.5
 
+# sleep time for servo rotation (seconds)
+sleep_time_servo = 1.6
+
+# sleep time for buzz/ping duration (seconds)
+sleep_time_buzz = 0.25
+
 # What direction should the servo spin?
+# not_used
 direction = "cw"
 
 # morning feeding schedule (UTC 24 hr clock)
@@ -33,3 +40,9 @@ APPKEY = 'YOUR_APP_KEY'
 APPSECRET = 'YOUR_APP_SECRET'
 ACCESSTOKEN = 'YOUR_ACCESS_TOKEN'
 ACCESSTOKENSECRET = 'YOUR_ACCESS_TOKEN_SECRET'
+
+# cronitor.io hash for REST calls on run and complete
+cronitor_hash = "abCtGl"
+
+# where to save the food image (overwrites each picture); no trailing slash
+img_path = "/home/USER/pics"
