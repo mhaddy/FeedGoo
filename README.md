@@ -16,7 +16,7 @@ python man_feedgoo.py
 Both feedgoo.py and man_feedgoo.py write to feedgoo.log to /var/log/feedgoo/ directory.
 
 ## Integrations
-There are two services that are called in this script - Twython to post images to Twitter, and Cronitor to monitor the feeding schedule. You'll need to sign-up for services on both, and then add your Twitter App Key/App Secret/Access Token/Access Token Secret, and Cronitor REST hash to configvars.py.
+There are two services that are called in this script - Twython to post images to Twitter, and Cronitor to monitor the feeding schedule (and alert you if the cat hasn't been fed). You'll need to sign-up for services on both, and then add your Twitter App Key/App Secret/Access Token/Access Token Secret, and Cronitor REST hash to configvars.py.
 
 ## Schema - How to build this
 Here's the [Parts List](https://docs.google.com/spreadsheets/d/1Oq6u6sb5ZfjovzqHFOSRNVcbzIy2-sk2-1YNxwCJh-8/edit?usp=sharing) I used to build the cat feeder along with where I purchased the item. Prices, shipping, etc. may vary but all-in, including the Pi, this project ran me CAD$125.
