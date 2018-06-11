@@ -1,22 +1,13 @@
 # FeedGoo
 Raspberry Pi-powered cat feeder written in Python that operates a high-torque servo-powered cereal dispenser (the kind you find in hotels) to deposit food down a pipe into a bowl to a smiling cat. Pics are posted to Twitter, of course. Uses [Cronitor](https://www.cronitor.io) to monitor whether feedings are occurring per schedule.
 
-### Sidebar
-> Initially I had used [schedule](https://github.com/dbader/schedule) to operate the servo at designated times, which is a very powerful scheduler that doesn't rely on cron (if, for example, you didn't have permission to access it). However, after much testing, it wasn't reliable so I've resorted to cron and **no longer use feedgoo.py**.
-
-> I've left the code in the repo if someone wants to take it from here. If you choose the feedgoo.py route, add the following to your crontab and it'll wait until the scheduled times to operate the servo (set to configvars.py). Doing so also ensures that during a power outage, upon start-up, it'll resume the feeding schedule.
-
-```
-@reboot python /home/mhadpi/FeedGoo/v1/feedgoo.py &
-```
-## Normal Programming Resumes
 Add the following line to your crontab (adjust timing as necessary) to schedule your feedings:
 
 ```
 20 10,22 * * * /home/USER/FeedGoo/v1/man_feedgoo.py
 ```
 
-If you notice that the schedule isn't operating correctly and you want to trigger the servo immediately on an ad hoc basis, do the following:
+If you notice that the schedule isn't operating correctly and you want to trigger the servo immediately on an ad hoc basis, do the following (future versions will include hooks to IFTTT):
 
 ```
 python man_feedgoo.py
@@ -39,6 +30,15 @@ When you're done, you could end up with something like this! I mounted the cerea
 ![Finished Product](https://raw.githubusercontent.com/mhaddy/FeedGoo/master/docs/IMG_1687.JPG)
 
 ![Back of Wood](https://raw.githubusercontent.com/mhaddy/FeedGoo/master/docs/feedgoo-back.JPG)
+
+### Sidebar
+> Initially I had used [schedule](https://github.com/dbader/schedule) to operate the servo at designated times, which is a very powerful scheduler that doesn't rely on cron (if, for example, you didn't have permission to access it). However, after much testing, it wasn't reliable so I've resorted to cron and **no longer use feedgoo.py**.
+
+> I've left the code in the repo if someone wants to take it from here. If you choose the feedgoo.py route, add the following to your crontab and it'll wait until the scheduled times to operate the servo (set to configvars.py). Doing so also ensures that during a power outage, upon start-up, it'll resume the feeding schedule.
+
+```
+@reboot python /home/mhadpi/FeedGoo/v1/feedgoo.py &
+```
 
 ## Future Versions
 Refer to the [Wiki](https://github.com/mhaddy/FeedGoo/wiki)!
