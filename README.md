@@ -1,19 +1,20 @@
 # FeedGoo
-Raspberry Pi-powered cat feeder written in Python that operates a high-torque servo-powered cereal dispenser (the kind you find in hotels) to deposit food down a pipe into a bowl to a smiling cat.
+Raspberry Pi-powered cat feeder written in Python that operates a high-torque servo-powered cereal dispenser (the kind you find in hotels) to deposit food down a pipe into a bowl to a smiling cat. Pics are posted to Twitter, of course. Uses [Cronitor](https://www.cronitor.io) to monitor whether feedings are occurring per schedule.
 
-To run the script, do the following: 
+### Sidebar
+> Initially I had used [schedule](https://github.com/dbader/schedule) to operate the servo at designated times, which is a very powerful scheduler that doesn't rely on cron (if, for example, you didn't have permission to access it). However, after much testing, it wasn't reliable so I've resorted to cron and **no longer use feedgoo.py**.
 
-```
-python feedgoo.py
-```
-
-And it'll wait until the scheduled times to operate the servo. I recommend adding the script to your crontab @reboot so even if your Pi loses power, upon start-up, it'll resume the feeding schedule. To do that, add the following line to your crontab:
+> I've left the code in the repo if someone wants to take it from here. If you choose the feedgoo.py route, add the following to your crontab and it'll wait until the scheduled times to operate the servo (set to configvars.py). Doing so also ensures that during a power outage, upon start-up, it'll resume the feeding schedule.
 
 ```
 @reboot python /home/mhadpi/FeedGoo/v1/feedgoo.py &
 ```
+## Normal Programming Resumes
+Add the following line to your crontab (adjust timing as necessary) to schedule your feedings:
 
-Uses [schedule](https://github.com/dbader/schedule) to operate the servo at the designated times. Very powerful scheduler that doesn't rely on cron.
+```
+20 10,22 * * * /home/USER/FeedGoo/v1/man_feedgoo.py
+```
 
 If you notice that the schedule isn't operating correctly and you want to trigger the servo immediately on an ad hoc basis, do the following:
 
@@ -21,9 +22,10 @@ If you notice that the schedule isn't operating correctly and you want to trigge
 python man_feedgoo.py
 ```
 
-The above command just calls the manual_feed() routine to call the feed_goo() routine not on a schedule. 
-
 Both feedgoo.py and man_feedgoo.py write to feedgoo.log to /var/log/feedgoo/ directory.
+
+## Integrations
+There are two services that are called in this script - Twython to post images to Twitter, and Cronitor to monitor the feeding schedule. You'll need to sign-up for services on both, and then add your Twitter App Key/App Secret/Access Token/Access Token Secret, and Cronitor REST hash to configvars.py.
 
 ## Schema - How to build this
 Here's the [Parts List](https://docs.google.com/spreadsheets/d/1Oq6u6sb5ZfjovzqHFOSRNVcbzIy2-sk2-1YNxwCJh-8/edit?usp=sharing) I used to build the cat feeder along with where I purchased the item. Prices, shipping, etc. may vary but all-in, including the Pi, this project ran me CAD$125.
