@@ -56,11 +56,21 @@ GPIO.output(cv.butt_led_pin, False)
 # Rotate feeder wheel clockwise
 def servo_cw():
 	servo = GPIO.PWM(cv.servo_pin, 50)
-	servo.start(cv.rotate_time_cw)
-	time.sleep(cv.sleep_time_servo)
-	servo.stop()
-	time.sleep(cv.sleep_time_servo)
 
+	try:
+		servo.start(cv.rotate_time_cw)
+		time.sleep(cv.sleep_time_servo)
+		servo.stop()
+
+	except KeyboardInterrupt:
+		logging.info("CTRL+C pressed, servo operation stopped")
+
+	except:
+		logging.info("Servo operation interrupted")
+
+	finally:
+		GPIO.cleanup()
+	
 # Call the appropriate servo_XXX function
 def feed_goo():
 	#not yet implemented
